@@ -25,5 +25,8 @@
 ## Queue management (wip)
 > development only ;P
 ```bash
-  dotnet run -p DeathStar.App asb-queue count --env dev --queue customer-configuration
+  dotnet run -p DeathStar.App asb-queue count --env dev --queue some-queue
+  
+  Success!! 
+  The DLQ queue some-queue have 78 itens for env dev.
 ```
