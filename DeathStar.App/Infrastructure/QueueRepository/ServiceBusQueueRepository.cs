@@ -1,5 +1,8 @@
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
+using Microsoft.Azure.ServiceBus.Management;
+using DeathStar.App.Core;
+using System;
+
 namespace DeathStar.App.Infrastructure.QueueRepository
 {
     public class ServiceBusQueueRepository : IServiceBusQueueRepository
@@ -7,13 +10,9 @@ namespace DeathStar.App.Infrastructure.QueueRepository
 
         public async Task<int> Count(string connection, string queueName)
         {
-            await using (var client = new ServiceBusClient(connection))
-            {
-                var receiver = client.CreateReceiver(queueName);
-                var count = receiver.PrefetchCount;
-                return count;
-            }
-            return 1;
+                var managementClient = new ManagementClient(connection);
+                var queue = await managementClient.GetQueueRuntimeInfoAsync($"{queueName}");
+                return (int)queue.MessageCount;
         }
     }
 }

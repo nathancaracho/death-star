@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using DeathStar.App.Infrastructure.FileRepository;
 using DeathStar.App.Infrastructure.QueueRepository;
+using System.Linq;
 
 namespace DeathStar.App.Domain.Services.Queue
 {
@@ -15,9 +16,11 @@ namespace DeathStar.App.Domain.Services.Queue
             _queueRepository = queueRepository;
         }
 
-        public Task<int> Count(string envName, string queue)
+        public async Task<int> Count(string envName, string queue)
         {
-            return Task.FromResult(1);
+            var env = (await _fileRepository.GetAll()).FirstOrDefault(e=>e.Name.Equals(envName));
+            var count = await _queueRepository.Count(env.Connection,queue);
+            return count;
         }
     }
 }

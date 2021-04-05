@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DeathStar.App.Core;
 using DeathStar.App.Domain.Services.Queue;
 using McMaster.Extensions.CommandLineUtils;
-
+using System;
 namespace DeathStar.App.SubCommands
 {
     [Command("asb-queue", Description = "Manage environments"), Subcommand(typeof(Count))]
@@ -29,9 +29,17 @@ namespace DeathStar.App.SubCommands
 
             private async Task<int> OnExecute()
             {
-                var count = await _asbService.Count(EnvironmentName, QueueName);
-                ConsoleUtil.Success($"The DQL queue {QueueName} have {count} itens.");
-                return 1;
+                try
+                {
+                    var count = await _asbService.Count(EnvironmentName, QueueName);
+                    ConsoleUtil.Success($"The DLQ queue {QueueName} have {count} itens for env {EnvironmentName}.");
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    ConsoleUtil.Error($"Have some error whe try get messages count {ex}");
+                    return -1;
+                }
             }
         }
     }
