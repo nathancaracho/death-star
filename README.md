@@ -1,4 +1,5 @@
 # Death Star (WIP)
+A DLQ-Queue pull and Queue push Management.
 ## TODO List
 - [x] Menage environments as JSON
 	- [x] Save one
