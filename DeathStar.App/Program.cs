@@ -8,7 +8,7 @@ using DeathStar.App.SubCommands;
 using DeathStar.App.Infrastructure.FileRepository;
 namespace DeathStar.App
 {
-    [Command(Description = "Queue pull and push"), Subcommand(typeof(EnvironmentSubCommand))]
+    [Command(Description = "Queue pull and push"), Subcommand(typeof(EnvironmentSubCommand), typeof(ServiceBusSubCommand))]
     class App
     {
         public static async Task<int> Main(string[] args)
