@@ -1,10 +1,13 @@
 # Death Star (WIP)
-    -[X] Menage environments as JSON
-        -[X] Save one
-        -[X] List all
-        -[X] List by name
-        -[X] Remove one
-    -[ ] Menage pull and push operations with service bus first 
+## TODO List
+- [x] Menage environments as JSON
+	- [x] Save one
+  - [X] List all
+  - [x] List by nam
+  - [x] Remove one
+- [ ] Menage pull and push operations with service bus first 
+
+
 ## Environment
 ### Save a environment
 ```bash
