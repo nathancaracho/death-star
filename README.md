@@ -22,3 +22,8 @@
     Success!! 
         Name: PRD, Connection: sb://, Show warning: True
 ```
+## Queue management (wip)
+> development only ;P
+```bash
+  dotnet run -p DeathStar.App asb-queue count --env dev --queue customer-configuration
+```
