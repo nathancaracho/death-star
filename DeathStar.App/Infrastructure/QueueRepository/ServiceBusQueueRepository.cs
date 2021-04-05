@@ -10,9 +10,10 @@ namespace DeathStar.App.Infrastructure.QueueRepository
 
         public async Task<int> Count(string connection, string queueName)
         {
-                var managementClient = new ManagementClient(connection);
-                var queue = await managementClient.GetQueueRuntimeInfoAsync($"{queueName}");
-                return (int)queue.MessageCount;
+            var managementClient = new ManagementClient(connection);
+            var queue = await managementClient.GetQueueRuntimeInfoAsync($"{queueName}");
+            return (int)queue.MessageCountDetails.DeadLetterMessageCount;
+
         }
     }
 }
