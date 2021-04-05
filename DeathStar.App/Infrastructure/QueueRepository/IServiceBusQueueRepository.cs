@@ -2,8 +2,9 @@ using System.Threading.Tasks;
 
 namespace DeathStar.App.Infrastructure.QueueRepository
 {
-    public interface IQueueRepository
+    public interface IServiceBusQueueRepository : IQueueRepository
     {
-        Task<int> Count(string connection, string queueName);
+
+
     }
 }

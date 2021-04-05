@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 using DeathStar.App.Core;
 using DeathStar.App.SubCommands;
 using DeathStar.App.Infrastructure.FileRepository;
+using DeathStar.App.Infrastructure.QueueRepository;
+using DeathStar.App.Domain.Services.Queue;
+
 namespace DeathStar.App
 {
     [Command(Description = "Queue pull and push"), Subcommand(typeof(EnvironmentSubCommand), typeof(ServiceBusSubCommand))]
@@ -15,6 +18,8 @@ namespace DeathStar.App
         {
             var services = new ServiceCollection()
                         .AddSingleton<IFileRepository, FileRepository>()
+                        .AddScoped<IServiceBusQueueRepository, ServiceBusQueueRepository>()
+                        .AddScoped<IServiceBusService, ServiceBusService>()
                         .AddSingleton<IConsole>(PhysicalConsole.Singleton)
                     .BuildServiceProvider();
             var app = new CommandLineApplication<App>();

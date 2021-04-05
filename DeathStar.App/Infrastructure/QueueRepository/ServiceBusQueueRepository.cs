@@ -2,13 +2,10 @@ using System.Threading.Tasks;
 
 namespace DeathStar.App.Infrastructure.QueueRepository
 {
-    public class ServiceBusQueueRepository : QueueRepository, IQueueRepository
+    public class ServiceBusQueueRepository : IServiceBusQueueRepository
     {
-        public ServiceBusQueueRepository(string connection, string queueName) : base(connection, queueName)
-        {
-        }
 
-        public Task<int> Count()
+        public Task<int> Count(string connection, string queueName)
         {
             return Task.FromResult(1);
         }
