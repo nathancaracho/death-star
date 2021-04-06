@@ -9,5 +9,6 @@ namespace DeathStar.App.Infrastructure.FileRepository
         Task<IEnumerable<EnvironmentModel>> GetAll();
         Task SaveOne(EnvironmentModel environment);
         Task RemoveByName(string name);
+        Task Save(string file, string filePath);
     }
 }
