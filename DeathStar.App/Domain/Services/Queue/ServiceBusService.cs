@@ -31,9 +31,9 @@ namespace DeathStar.App.Domain.Services.Queue
             var connection = await GetEnvConnection(envName);
             var messages = await _queueRepository.Pull(connection, queue, count);
 
-            var parsedMessages = JsonSerializer.Serialize(messages.Select(message => message.ToString()));
+            var parsedMessages = JsonSerializer.Serialize(messages.Select(message => JsonSerializer.Deserialize<object>(message.Body.ToString())));
 
-            var fileName = $"{Environment.CurrentDirectory}/{queue}-{DateTime.Now.ToString("DD-MM-YY")}";
+            var fileName = $"{Environment.CurrentDirectory}/{queue}-{DateTime.Now.ToString("dd-MM-yy-mm-ss")}.json";
             await _fileRepository.Save(parsedMessages, fileName);
         }
 
@@ -42,7 +42,7 @@ namespace DeathStar.App.Domain.Services.Queue
             var env = (await _fileRepository.GetAll()).FirstOrDefault(e => e.Name.Equals(envName));
             if (env is null)
                 throw new ArgumentException($"Have no environment {envName}");
-            return env.Name;
+            return env.Connection;
         }
     }
 }

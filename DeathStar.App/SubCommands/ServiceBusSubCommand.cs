@@ -70,7 +70,7 @@ namespace DeathStar.App.SubCommands
                 try
                 {
                     ConsoleUtil.Message("Pulling messages.....");
-                    if (PullAll)
+                    if (PullAll is false)
                         Count = 1;
 
                     await _asbService.Pull(EnvironmentName, QueueName, Count);

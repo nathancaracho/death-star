@@ -27,7 +27,7 @@ namespace DeathStar.App.Infrastructure.QueueRepository
 
             await using (var client = new ServiceBusClient(connection))
             {
-                var deadLetter = client.CreateReceiver($"{queueName}/$DeadLetter");
+                var deadLetter = client.CreateReceiver($"{queueName}/$DeadLetterQueue");
                 return await deadLetter.ReceiveMessagesAsync(count.Value);
             }
         }

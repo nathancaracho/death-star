@@ -36,7 +36,7 @@ namespace DeathStar.App.Infrastructure.FileRepository
 
         public async Task Save(string file, string filePath)
         {
-            using StreamWriter writer = new(_fileEnvName);
+            using StreamWriter writer = new(filePath);
             await writer.WriteAsync(file);
         }
 
