@@ -40,13 +40,13 @@ namespace DeathStar.App.SubCommands
         {
             try
             {
-                ConsoleUtil.Message("Saving env .....");
+                ConsoleCore.Message("Saving env .....");
                 await _fileRepository.SaveOne(new EnvironmentModel(Name, Connection, ShowWarning));
-                ConsoleUtil.Success($"New env {Name} saved with success");
+                ConsoleCore.Success($"New env {Name} saved with success");
             }
             catch (Exception ex)
             {
-                ConsoleUtil.Error($"Env is not saved : {ex}");
+                ConsoleCore.Error($"Env is not saved : {ex}");
                 return -1;
             }
 
@@ -68,13 +68,13 @@ namespace DeathStar.App.SubCommands
         public List(IEnvironmentRepository fileRepository) => _fileRepository = fileRepository;
         public async Task<int> OnExecute()
         {
-            ConsoleUtil.Message("Try find env .....");
+            ConsoleCore.Message("Try find env .....");
 
             try
             {
                 var environments = await _fileRepository.GetAll();
                 if (environments.Any() is false)
-                    ConsoleUtil.Warning("Have no environments saved");
+                    ConsoleCore.Warning("Have no environments saved");
 
                 if (ShowAll)
                     environments.ToList().ForEach(writeEnvironment);
@@ -83,7 +83,7 @@ namespace DeathStar.App.SubCommands
                     var environment = environments.FirstOrDefault(env => env.Name.Equals(Name));
                     if (environment is null)
                     {
-                        ConsoleUtil.Warning($"Have no environments saved with this name: {Name}");
+                        ConsoleCore.Warning($"Have no environments saved with this name: {Name}");
                         return -1;
                     }
 
@@ -93,13 +93,13 @@ namespace DeathStar.App.SubCommands
             }
             catch (Exception ex)
             {
-                ConsoleUtil.Error($"Can't find any environment : {ex}");
+                ConsoleCore.Error($"Can't find any environment : {ex}");
                 return -1;
             }
 
             return 1;
 
-            void writeEnvironment(EnvironmentModel env) => ConsoleUtil.Success($"Name: {env.Name}, Connection: {env.Connection}, Show warning: {env.ShowWarning}");
+            void writeEnvironment(EnvironmentModel env) => ConsoleCore.Success($"Name: {env.Name}, Connection: {env.Connection}, Show warning: {env.ShowWarning}");
         }
     }
 
@@ -114,16 +114,16 @@ namespace DeathStar.App.SubCommands
         public Remove(IEnvironmentRepository fileRepository) => _fileRepository = fileRepository;
         public async Task<int> OnExecute()
         {
-            ConsoleUtil.Message("Removing env .....");
+            ConsoleCore.Message("Removing env .....");
             try
             {
                 await _fileRepository.RemoveByName(Name);
-                ConsoleUtil.Success($"Env {Name} was removed with success");
+                ConsoleCore.Success($"Env {Name} was removed with success");
                 return 1;
             }
             catch (Exception ex)
             {
-                ConsoleUtil.Error($"Can't Remove any environment : {ex}");
+                ConsoleCore.Error($"Can't Remove any environment : {ex}");
                 return -1;
             }
         }

@@ -26,12 +26,11 @@ namespace DeathStar.App.Domain.Services.Queue
             return await _queueRepository.Count(connection, queue);
         }
 
-        public async Task Pull(string envName, string queue, int? count = null)
+        public async Task Pull(string connection, string queue, int? count = null)
         {
             var fileName = $"{Environment.CurrentDirectory}/{queue}-{DateTime.Now.ToString("dd-MM-yy-mm-ss")}.json";
 
-            var connection = await GetConnection(envName);
-            var messages = await _queueRepository.Pull(connection, queue, count);
+            var messages = await _queueRepository.Pull((string)connection, queue, count);
 
             var parsedMessages = JsonSerializer.Serialize(messages.Select(message => JsonSerializer.Deserialize<object>(message.Body.ToString())));
 

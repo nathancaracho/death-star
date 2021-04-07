@@ -24,7 +24,7 @@ namespace DeathStar.App.Infrastructure.QueueRepository
         {
             if (count.HasValue is false)
                 count = await Count(connection, queueName);
-
+        
             await using (var client = new ServiceBusClient(connection))
             {
                 var deadLetter = client.CreateReceiver($"{queueName}/$DeadLetterQueue");

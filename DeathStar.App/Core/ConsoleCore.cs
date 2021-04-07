@@ -1,9 +1,10 @@
 using System;
 using DeathStar.App.Domain.Models;
+using McMaster.Extensions.CommandLineUtils;
 
 namespace DeathStar.App.Core
 {
-    public static class ConsoleUtil
+    public static class ConsoleCore
     {
         private const string _deathStarSuffix = "(º-) ";
 
@@ -41,6 +42,7 @@ namespace DeathStar.App.Core
         public static void Message(string msg) => WriteLineWithColor($"{_deathStarSuffix} {msg}", ConsoleColor.Gray);
         public static void ProgressBar(ProgressBar progress) => Console.WriteLine(progress);
 
+        public static bool GetYesNo(string msg) => Prompt.GetYesNo($"Warning!! \n {msg}", false, ConsoleColor.Yellow);
         private static void WriteLineWithColor(string msg, ConsoleColor color)
         {
             Console.ForegroundColor = color;

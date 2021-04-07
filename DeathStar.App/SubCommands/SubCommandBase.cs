@@ -9,7 +9,7 @@ namespace DeathStar.App.SubCommands
         protected async Task<int> OnExecute(CommandLineApplication app)
         {
 
-            ConsoleUtil.Title();
+            ConsoleCore.Title();
             app.ShowHelp();
             return 1;
         }

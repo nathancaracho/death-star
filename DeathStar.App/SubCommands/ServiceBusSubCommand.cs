@@ -5,6 +5,8 @@ using DeathStar.App.Core;
 using DeathStar.App.Domain.Services.Queue;
 using McMaster.Extensions.CommandLineUtils;
 using System;
+using DeathStar.App.Infrastructure.FileRepository;
+
 namespace DeathStar.App.SubCommands
 {
     [Command("asb-queue", Description = "Manage queue"),
@@ -27,14 +29,14 @@ namespace DeathStar.App.SubCommands
 
                 try
                 {
-                    ConsoleUtil.Message("Get DLQ Count.....");
+                    ConsoleCore.Message("Get DLQ Count.....");
                     var count = await _asbService.Count(EnvironmentName, QueueName);
-                    ConsoleUtil.Success($"The DLQ queue {QueueName} have {count} itens for env {EnvironmentName}.");
+                    ConsoleCore.Success($"The DLQ queue {QueueName} have {count} itens for env {EnvironmentName}.");
                     return 1;
                 }
                 catch (Exception ex)
                 {
-                    ConsoleUtil.Error($"Have some error whe try get messages count {ex}");
+                    ConsoleCore.Error($"Have some error whe try get messages count {ex.Message}");
                     return -1;
                 }
             }
@@ -48,12 +50,14 @@ namespace DeathStar.App.SubCommands
             [Option("--count", ShortName = "c", Description = "pull queue count")]
             private int? Count { get; set; }
 
-            [Option("--all", Description = "Queue Name")]
+            [Option("--all", Description = "pull all menssages")]
             private bool PullAll { get; } = false;
 
+            private readonly IEnvironmentRepository _environmentRepository;
             private readonly IServiceBusService _asbService;
-            public Pull(IServiceBusService asbService)
+            public Pull(IServiceBusService asbService, IEnvironmentRepository environmentRepository)
             {
+                _environmentRepository = environmentRepository;
                 _asbService = asbService;
             }
 
@@ -62,17 +66,24 @@ namespace DeathStar.App.SubCommands
 
                 try
                 {
-                    ConsoleUtil.Message("Pulling messages.....");
+
+                    var environment = await _environmentRepository.GetEnvironmentByName(EnvironmentName);
+
+                    var keep = !environment.ShowWarning || ConsoleCore.GetYesNo("If you pull DLQ messages you will download and delete, do you wanna make it?");
+                    if (keep is false)
+                        return 1;
+
+                    ConsoleCore.Message("Pulling messages.....");
                     if (PullAll is false)
                         Count = 1;
 
-                    await _asbService.Pull(EnvironmentName, QueueName, Count);
-                    ConsoleUtil.Success($"The DLQ queue has been save");
+                    await _asbService.Pull(environment.Connection, QueueName, Count);
+                    ConsoleCore.Success($"The DLQ queue has been saved");
                     return 1;
                 }
                 catch (Exception ex)
                 {
-                    ConsoleUtil.Error($"Have some error whe try get messages count {ex}");
+                    ConsoleCore.Error($"Have some error when try pull messages: {ex.Message}");
                     return -1;
                 }
             }
