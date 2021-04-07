@@ -6,15 +6,22 @@ using Microsoft.Extensions.Logging;
 using DeathStar.App.Core;
 using DeathStar.App.SubCommands;
 using DeathStar.App.Infrastructure.FileRepository;
+using DeathStar.App.Infrastructure.QueueRepository;
+using DeathStar.App.Domain.Services.Queue;
+
 namespace DeathStar.App
 {
-    [Command(Description = "Queue pull and push"), Subcommand(typeof(EnvironmentSubCommand))]
-    class App
+    [Command(Description = "QUEUE Management"),
+    Subcommand(typeof(EnvironmentSubCommand), typeof(ServiceBusSubCommand))]
+    [HelpOption("-man")]
+    class App : SubCommandBase
     {
         public static async Task<int> Main(string[] args)
         {
             var services = new ServiceCollection()
-                        .AddSingleton<IFileRepository, FileRepository>()
+                        .AddSingleton<IEnvironmentRepository, EnvironmentRepository>()
+                        .AddScoped<IServiceBusQueueRepository, ServiceBusQueueRepository>()
+                        .AddScoped<IServiceBusService, ServiceBusService>()
                         .AddSingleton<IConsole>(PhysicalConsole.Singleton)
                     .BuildServiceProvider();
             var app = new CommandLineApplication<App>();
@@ -23,13 +30,6 @@ namespace DeathStar.App
                 .UseDefaultConventions()
                 .UseConstructorInjection(services);
             return app.Execute(args);
-        }
-
-        private int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            ConsoleUtil.Title();
-            app.ShowHelp();
-            return 1;
         }
     }
 }

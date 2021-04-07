@@ -1,9 +1,10 @@
 using System;
 using DeathStar.App.Domain.Models;
+using McMaster.Extensions.CommandLineUtils;
 
 namespace DeathStar.App.Core
 {
-    public static class ConsoleUtil
+    public static class ConsoleCore
     {
         private const string _deathStarSuffix = "(º-) ";
 
@@ -23,9 +24,9 @@ namespace DeathStar.App.Core
     .        .   ,-~'     '~-.                                +
     |-|        ,^ ___         ^. +                  .    .       .
               / .^   ^.         \         .      
-             !  l  o  !          !  .         + .    .       |-|
+             !  l  o  !          !  .         + .    .       |-|    
      .       |_ `.___.'        _,|                    +
-             |^~'-----------''~ ^|       +    |-|
+             |^~'-----------''~ ^|       +    |-|       x        +   .
    +       . !                   !     .       
               ^.               .^            .            +.
                 ''-.._____.,-' .                    .
@@ -35,12 +36,13 @@ namespace DeathStar.App.Core
             ";
             Console.WriteLine(msg);
         }
-        public static void Success(string msg) => WriteLineWithColor($"Success!! \n {msg}", ConsoleColor.Green);
-        public static void Warning(string msg) => WriteLineWithColor($"Warning!! \n {msg}", ConsoleColor.Yellow);
-        public static void Error(string msg) => WriteLineWithColor($"ERROR!! \n {msg}", ConsoleColor.Red);
+        public static void Success(string msg) => WriteLineWithColor($"Success: May the force be with \n {msg}", ConsoleColor.Green);
+        public static void Warning(string msg) => WriteLineWithColor($"Warning: It's a trap!! \n {msg}", ConsoleColor.Yellow);
+        public static void Error(string msg) => WriteLineWithColor($"ERROR NOOOOOOOOOOO!! \n {msg}", ConsoleColor.Red);
         public static void Message(string msg) => WriteLineWithColor($"{_deathStarSuffix} {msg}", ConsoleColor.Gray);
         public static void ProgressBar(ProgressBar progress) => Console.WriteLine(progress);
 
+        public static bool GetYesNo(string msg) => Prompt.GetYesNo($"Warning It's a trap!! \n {msg}", false, ConsoleColor.Yellow);
         private static void WriteLineWithColor(string msg, ConsoleColor color)
         {
             Console.ForegroundColor = color;
