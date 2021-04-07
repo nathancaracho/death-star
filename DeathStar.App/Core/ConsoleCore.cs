@@ -36,13 +36,13 @@ namespace DeathStar.App.Core
             ";
             Console.WriteLine(msg);
         }
-        public static void Success(string msg) => WriteLineWithColor($"Success!! \n {msg}", ConsoleColor.Green);
-        public static void Warning(string msg) => WriteLineWithColor($"Warning!! \n {msg}", ConsoleColor.Yellow);
-        public static void Error(string msg) => WriteLineWithColor($"ERROR!! \n {msg}", ConsoleColor.Red);
+        public static void Success(string msg) => WriteLineWithColor($"Success: May the force be with \n {msg}", ConsoleColor.Green);
+        public static void Warning(string msg) => WriteLineWithColor($"Warning: It's a trap!! \n {msg}", ConsoleColor.Yellow);
+        public static void Error(string msg) => WriteLineWithColor($"ERROR NOOOOOOOOOOO!! \n {msg}", ConsoleColor.Red);
         public static void Message(string msg) => WriteLineWithColor($"{_deathStarSuffix} {msg}", ConsoleColor.Gray);
         public static void ProgressBar(ProgressBar progress) => Console.WriteLine(progress);
 
-        public static bool GetYesNo(string msg) => Prompt.GetYesNo($"Warning!! \n {msg}", false, ConsoleColor.Yellow);
+        public static bool GetYesNo(string msg) => Prompt.GetYesNo($"Warning It's a trap!! \n {msg}", false, ConsoleColor.Yellow);
         private static void WriteLineWithColor(string msg, ConsoleColor color)
         {
             Console.ForegroundColor = color;

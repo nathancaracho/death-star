@@ -19,5 +19,8 @@ namespace DeathStar.App.Domain.Models
             Connection = connection;
             ShowWarning = showWarning;
         }
+        public static implicit operator string(EnvironmentModel env) => $"Name: {env.Name}, Connection: {env.Connection}, Show warning: {env.ShowWarning}";
+
+        public override string ToString() => $"Name: {Name}, Connection: {Connection}, Show warning: {ShowWarning}";
     }
 }

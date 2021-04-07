@@ -41,12 +41,13 @@ namespace DeathStar.App.SubCommands
             try
             {
                 ConsoleCore.Message("Saving env .....");
-                await _fileRepository.SaveOne(new EnvironmentModel(Name, Connection, ShowWarning));
-                ConsoleCore.Success($"New env {Name} saved with success");
+                var environment = new EnvironmentModel(Name, Connection, ShowWarning);
+                await _fileRepository.SaveOne(environment);
+                ConsoleCore.Success($"New env {Name} saved \n - {environment}");
             }
             catch (Exception ex)
             {
-                ConsoleCore.Error($"Env is not saved : {ex}");
+                ConsoleCore.Error($"Have some error when try save environment {ex.Message}");
                 return -1;
             }
 
@@ -72,34 +73,24 @@ namespace DeathStar.App.SubCommands
 
             try
             {
-                var environments = await _fileRepository.GetAll();
-                if (environments.Any() is false)
-                    ConsoleCore.Warning("Have no environments saved");
-
                 if (ShowAll)
-                    environments.ToList().ForEach(writeEnvironment);
-                else
                 {
-                    var environment = environments.FirstOrDefault(env => env.Name.Equals(Name));
-                    if (environment is null)
-                    {
-                        ConsoleCore.Warning($"Have no environments saved with this name: {Name}");
-                        return -1;
-                    }
-
-                    writeEnvironment(environment);
+                    var environments = await _fileRepository.GetAll();
+                    if (environments.Any() is false)
+                        throw new ArgumentException("Have no environments saved");
+                    ConsoleCore.Success(string.Join("\n ", environments));
                 }
+                else
+                    ConsoleCore.Success((await _fileRepository.GetEnvironmentByName(Name)));
 
             }
             catch (Exception ex)
             {
-                ConsoleCore.Error($"Can't find any environment : {ex}");
+                ConsoleCore.Error($"Have some error when try find environment : {ex.Message}");
                 return -1;
             }
 
             return 1;
-
-            void writeEnvironment(EnvironmentModel env) => ConsoleCore.Success($"Name: {env.Name}, Connection: {env.Connection}, Show warning: {env.ShowWarning}");
         }
     }
 
