@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +8,7 @@ using DeathStar.App.Domain.Models;
 
 namespace DeathStar.App.Infrastructure.FileRepository
 {
-    public class FileRepository : IFileRepository
+    public class EnvironmentRepository : IEnvironmentRepository
     {
         private readonly string _fileEnvName = "env.json";
         public async Task<IEnumerable<EnvironmentModel>> GetAll()
@@ -32,14 +33,17 @@ namespace DeathStar.App.Infrastructure.FileRepository
         }
 
         private async Task SaveEnvironment(IEnumerable<EnvironmentModel> environments)
-            => await Save(JsonSerializer.Serialize(environments), _fileEnvName);
-
-        public async Task Save(string file, string filePath)
         {
-            using StreamWriter writer = new(filePath);
-            await writer.WriteAsync(file);
+            using StreamWriter writer = new(_fileEnvName);
+            await writer.WriteAsync(JsonSerializer.Serialize(environments));
         }
 
-
+        public async Task<EnvironmentModel> GetEnvironmentByName(string envName)
+        {
+            var environment = (await GetAll()).FirstOrDefault(env => env.Name.Equals(envName));
+            if (environment is null)
+                throw new ArgumentException($"Have no environment with name {envName}");
+            return environment;
+        }
     }
 }

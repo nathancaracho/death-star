@@ -11,17 +11,14 @@ namespace DeathStar.App.SubCommands
 {
     [Command("env", Description = "Manage environments"),
         Subcommand(typeof(Save), typeof(List), typeof(Remove))]
-    public class EnvironmentSubCommand
+    [HelpOption("-man")]
+    public class EnvironmentSubCommand : SubCommandBase
     {
-        private int OnExecute()
-        {
-            ConsoleUtil.Error("You must specify an action. See --help for more details.");
-            return 1;
-        }
 
     }
 
-    [Command("save", Description = "Save environment")]
+    [Command("save", Description = "Save an environment")]
+    [HelpOption("-man")]
     class Save
     {
 
@@ -36,8 +33,9 @@ namespace DeathStar.App.SubCommands
         [Option("--warning", ShortName = "w", Description = "Show warning when try some action with this env")]
         public bool ShowWarning { get; }
 
-        private readonly IFileRepository _fileRepository;
-        public Save(IFileRepository fileRepository) => _fileRepository = fileRepository;
+        private readonly IEnvironmentRepository _fileRepository;
+        public Save(IEnvironmentRepository fileRepository) => _fileRepository = fileRepository;
+
         public async Task<int> OnExecute()
         {
             try
@@ -56,17 +54,18 @@ namespace DeathStar.App.SubCommands
         }
     }
 
-    [Command("list", Description = "list environment")]
+    [Command("list", Description = "list an environment")]
+    [HelpOption("-man")]
     class List
     {
         [Option("--name", ShortName = "n", Description = "Environment Name")]
         public string Name { get; }
 
-        [Option("--all", Description = "Environment Name")]
+        [Option("--all", Description = "List all environments")]
         public bool ShowAll { get; }
 
-        private readonly IFileRepository _fileRepository;
-        public List(IFileRepository fileRepository) => _fileRepository = fileRepository;
+        private readonly IEnvironmentRepository _fileRepository;
+        public List(IEnvironmentRepository fileRepository) => _fileRepository = fileRepository;
         public async Task<int> OnExecute()
         {
             ConsoleUtil.Message("Try find env .....");
@@ -104,14 +103,15 @@ namespace DeathStar.App.SubCommands
         }
     }
 
-    [Command("Remove", Description = "list environment")]
+    [Command("Remove", Description = "remove an environment")]
+    [HelpOption("-man")]
     class Remove
     {
         [Option("--name", ShortName = "n", Description = "Environment Name")]
         public string Name { get; }
 
-        private readonly IFileRepository _fileRepository;
-        public Remove(IFileRepository fileRepository) => _fileRepository = fileRepository;
+        private readonly IEnvironmentRepository _fileRepository;
+        public Remove(IEnvironmentRepository fileRepository) => _fileRepository = fileRepository;
         public async Task<int> OnExecute()
         {
             ConsoleUtil.Message("Removing env .....");

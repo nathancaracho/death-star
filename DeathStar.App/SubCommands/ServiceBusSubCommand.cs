@@ -7,21 +7,13 @@ using McMaster.Extensions.CommandLineUtils;
 using System;
 namespace DeathStar.App.SubCommands
 {
-    [Command("asb-queue", Description = "Manage environments"),
+    [Command("asb-queue", Description = "Manage queue"),
         Subcommand(typeof(Count)), Subcommand(typeof(Pull))]
-    public class ServiceBusSubCommand
+    [HelpOption("-man")]
+    public class ServiceBusSubCommand : SubCommandBase
     {
-
-        private async Task<int> OnExecute(CommandLineApplication app)
-        {
-
-            ConsoleUtil.Message("count --env environment -q queue-name");
-            ConsoleUtil.Message("pull --env environment -q queue-name --all -c 2");
-
-            return 1;
-        }
-
         [Command("count", Description = "Count deadletter queue message")]
+        [HelpOption("-man")]
         private class Count : QueueSubCommand
         {
             private readonly IServiceBusService _asbService;
@@ -49,6 +41,7 @@ namespace DeathStar.App.SubCommands
         }
 
         [Command("pull", Description = "Pull messages")]
+        [HelpOption("-man")]
         private class Pull : QueueSubCommand
         {
             [Range(1, 99999, ErrorMessage = "Count out of range")]

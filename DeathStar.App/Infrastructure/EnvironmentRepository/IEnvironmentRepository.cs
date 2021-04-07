@@ -4,11 +4,11 @@ using DeathStar.App.Domain.Models;
 
 namespace DeathStar.App.Infrastructure.FileRepository
 {
-    public interface IFileRepository
+    public interface IEnvironmentRepository
     {
         Task<IEnumerable<EnvironmentModel>> GetAll();
         Task SaveOne(EnvironmentModel environment);
         Task RemoveByName(string name);
-        Task Save(string file, string filePath);
+        Task<EnvironmentModel> GetEnvironmentByName(string EnvName);
     }
 }
