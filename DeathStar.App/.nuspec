@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata >
-        <!-- Required elements-->
+    <minClientVersion>3.6</minClientVersion>
         <id>death-star</id>
-        <version>0.0.1-beta</version>
+        <version>0.0.1-beta-2</version>
         <description>A DLQ puller tool and Queue pusher</description>
         <authors>nathan.caracho@hotmail.com</authors>
-        <TargetFramework>net5.0</TargetFramework>
+    
+        <packageTypes>
+            <packageType name="DotnetTool" />
+        </packageTypes>
         
-        <!-- Optional elements -->
         <license type="expression">MIT</license>
         <repository type="git" url="https://github.com/nathancaracho/death-star.git" branch="main"/>
        
         <tags>queue dlq serviceBus</tags>
         <dependencies>
+        <group targetFramework=".NET5.0">
             <dependency id="Azure.Messaging.ServiceBus" version="7.1.1" />
             <dependency id="McMaster.Extensions.CommandLineUtils" version="3.1.0" />
             <dependency id="Microsoft.Azure.ServiceBus" version="5.1.2" />
             <dependency id="Microsoft.Extensions.DependencyInjection" version="5.0.1" />
             <dependency id="Microsoft.Extensions.Hosting" version="5.0.0" />
             <dependency id="Microsoft.Extensions.Logging.Console" version="5.0.0" />
+        </group>
         </dependencies>
     </metadata>
-    <!-- Optional 'files' node -->
 </package>
