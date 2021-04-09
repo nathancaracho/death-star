@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-   <LangVersion>9.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <OutputType>Exe</OutputType>
+     <PackAsTool>true</PackAsTool>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <PackageOutputPath>./nupkg</PackageOutputPath>
     <NuspecFile>.nuspec</NuspecFile>
   </PropertyGroup>
   
@@ -18,7 +18,14 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Content Include="DotnetToolSettings.xml"/>
+    <Content Include="DotnetToolSettings.xml" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
-  
+   
+   <Target Name="PackGlobalTool" BeforeTargets="GenerateNuspec" DependsOnTargets="Publish">
+    <PropertyGroup>
+      <NuspecProperties>
+        publishDir=$(PublishDir);
+      </NuspecProperties>
+    </PropertyGroup>
+  </Target>
 </Project>
