@@ -16,21 +16,17 @@
        
         <tags>queue dlq serviceBus</tags>
         <dependencies>
-       
+            <dependency id="Microsoft.NETCore.Platforms" version="5.0" />
             <dependency id="Azure.Messaging.ServiceBus" version="7.1.1" />
             <dependency id="McMaster.Extensions.CommandLineUtils" version="3.1.0" />
             <dependency id="Microsoft.Azure.ServiceBus" version="5.1.2" />
-            <dependency id="Microsoft.Extensions.DependencyInjection" version="5.0.1" />
-            <dependency id="Microsoft.Extensions.Hosting" version="5.0.0" />
-            <dependency id="Microsoft.Extensions.Logging.Console" version="5.0.0" />
-  
+            <dependency id="Microsoft.Extensions.DependencyInjection" version="3.0.1" />
+            <dependency id="Microsoft.Extensions.Hosting" version="3.0.0" />
+            <dependency id="Microsoft.Extensions.Logging.Console" version="3.0.0" />
         </dependencies>
-          <dependencies>
-      <dependency id="Microsoft.NETCore.Platforms" version="3.0.1" />
-    </dependencies>
     </metadata>
     
     <files>
-    <file src="$publishdir$" target="tools/netcoreapp3.1/any/" />
+    <file src="$publishdir$" target="tools/net5.0/any/" />
   </files>
 </package>
