@@ -16,7 +16,7 @@ namespace DeathStar.App
     [HelpOption("-man")]
     class App : SubCommandBase
     {
-        public static async Task<int> Main(string[] args)
+        public static int Main(string[] args)
         {
             var services = new ServiceCollection()
                         .AddSingleton<IEnvironmentRepository, EnvironmentRepository>()

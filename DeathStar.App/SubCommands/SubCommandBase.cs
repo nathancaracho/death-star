@@ -6,7 +6,7 @@ namespace DeathStar.App.SubCommands
 {
     public class SubCommandBase
     {
-        protected async Task<int> OnExecute(CommandLineApplication app)
+        protected int OnExecute(CommandLineApplication app)
         {
 
             ConsoleCore.Title();
