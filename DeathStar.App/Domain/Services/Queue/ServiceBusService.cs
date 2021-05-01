@@ -6,6 +6,7 @@ using Azure.Messaging.ServiceBus;
 using System;
 using System.Text.Json;
 using System.IO;
+using DeathStar.App.Core;
 
 namespace DeathStar.App.Domain.Services.Queue
 {
@@ -26,14 +27,16 @@ namespace DeathStar.App.Domain.Services.Queue
             return await _queueRepository.Count(connection, queue);
         }
 
-        public async Task Pull(string connection, string queue, int? count = null)
+        public async Task Peek(string connection, string queue, bool peekAll, int? count = null)
         {
             var fileName = $"{Environment.CurrentDirectory}/{queue}-{DateTime.Now.ToString("dd-MM-yy-mm-ss")}.json";
 
-            var messages = await _queueRepository.Pull((string)connection, queue, count);
+            var messages = await _queueRepository.PeekAll((string)connection, queue);
 
+            ConsoleCore.Message("Serializing message...");
             var parsedMessages = JsonSerializer.Serialize(messages.Select(message => JsonSerializer.Deserialize<object>(message.Body.ToString())));
 
+            ConsoleCore.Message("Saving...");
             using StreamWriter writer = new(fileName);
             await writer.WriteAsync(parsedMessages);
         }

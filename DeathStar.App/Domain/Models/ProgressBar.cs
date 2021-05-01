@@ -11,8 +11,6 @@ namespace DeathStar.App.Domain.Models
         {
             var (done, Total) = progress;
 
-            if (Total < done)
-                throw new ArgumentException("The total value can't be lower than done value");
             if (Total < 0)
                 throw new ArgumentException("the total value can't be lower than 0");
             if (done < 0)
@@ -29,11 +27,12 @@ namespace DeathStar.App.Domain.Models
                 else
                     bar += _space;
             }
-            _value = $"[ {bar}] - {percent * 10}%";
+            _value = $"[ {bar}] - {done}≃{percent * 10}%";
 
         }
 
         public static implicit operator string(ProgressBar progress) => progress._value;
+        public override string ToString() => _value;
         public static implicit operator ProgressBar((int, int) progress) => new ProgressBar(progress);
     }
 }

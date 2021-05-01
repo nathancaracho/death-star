@@ -11,14 +11,14 @@ namespace DeathStar.App.SubCommands
 {
     [Command("env", Description = "Manage environments"),
         Subcommand(typeof(Save), typeof(List), typeof(Remove))]
-    [HelpOption("-man")]
+    [HelpOption("-?")]
     public class EnvironmentSubCommand : SubCommandBase
     {
 
     }
 
     [Command("save", Description = "Save an environment")]
-    [HelpOption("-man")]
+    [HelpOption("-?")]
     class Save
     {
 
@@ -56,7 +56,7 @@ namespace DeathStar.App.SubCommands
     }
 
     [Command("list", Description = "list an environment")]
-    [HelpOption("-man")]
+    [HelpOption("-?")]
     class List
     {
         [Option("--name", ShortName = "n", Description = "Environment Name")]
@@ -70,7 +70,6 @@ namespace DeathStar.App.SubCommands
         public async Task<int> OnExecute()
         {
             ConsoleCore.Message("Try find env .....");
-
             try
             {
                 if (ShowAll)
@@ -95,7 +94,7 @@ namespace DeathStar.App.SubCommands
     }
 
     [Command("Remove", Description = "remove an environment")]
-    [HelpOption("-man")]
+    [HelpOption("-?")]
     class Remove
     {
         [Option("--name", ShortName = "n", Description = "Environment Name")]

@@ -43,11 +43,21 @@ namespace DeathStar.App.Core
         public static void ProgressBar(ProgressBar progress) => Console.WriteLine(progress);
 
         public static bool GetYesNo(string msg) => Prompt.GetYesNo($"Warning It's a trap!! \n {msg}", false, ConsoleColor.Yellow);
+
+        public static void ProgressBar(int done, int total)
+        {
+            Console.CursorLeft = 0;
+            WriteLineWithColor($"{_deathStarSuffix} {(ProgressBar)(done, total)}", ConsoleColor.Blue);
+            Console.CursorTop = Console.GetCursorPosition().Top - 1;
+            Console.CursorVisible = false;
+        }
         private static void WriteLineWithColor(string msg, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             Console.WriteLine(msg);
             Console.ResetColor();
         }
+
+
     }
 }

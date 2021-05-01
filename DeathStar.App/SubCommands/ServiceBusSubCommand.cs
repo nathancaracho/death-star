@@ -9,13 +9,13 @@ using DeathStar.App.Infrastructure.FileRepository;
 
 namespace DeathStar.App.SubCommands
 {
-    [Command("asb-queue", Description = "Manage queue"),
-        Subcommand(typeof(Count)), Subcommand(typeof(Pull))]
-    [HelpOption("-man")]
+    [Command("queue", Description = "Manage queue"),
+        Subcommand(typeof(Count)), Subcommand(typeof(Peek))]
+    [HelpOption("-?")]
     public class ServiceBusSubCommand : SubCommandBase
     {
         [Command("count", Description = "Count deadletter queue message")]
-        [HelpOption("-man")]
+        [HelpOption("-?")]
         private class Count : QueueSubCommand
         {
             private readonly IServiceBusService _asbService;
@@ -42,20 +42,20 @@ namespace DeathStar.App.SubCommands
             }
         }
 
-        [Command("pull", Description = "Pull messages")]
-        [HelpOption("-man")]
-        private class Pull : QueueSubCommand
+        [Command("peek", Description = "Peek messages")]
+        [HelpOption("-?")]
+        private class Peek : QueueSubCommand
         {
             [Range(1, 99999, ErrorMessage = "Count out of range")]
-            [Option("--count", ShortName = "c", Description = "pull queue count")]
+            [Option("--count", ShortName = "c", Description = "peek queue count")]
             private int? Count { get; set; }
 
-            [Option("--all", Description = "pull all menssages")]
-            private bool PullAll { get; } = false;
+            [Option("--all", Description = "peek all menssages")]
+            private bool PeekAll { get; } = false;
 
             private readonly IEnvironmentRepository _environmentRepository;
             private readonly IServiceBusService _asbService;
-            public Pull(IServiceBusService asbService, IEnvironmentRepository environmentRepository)
+            public Peek(IServiceBusService asbService, IEnvironmentRepository environmentRepository)
             {
                 _environmentRepository = environmentRepository;
                 _asbService = asbService;
@@ -69,15 +69,9 @@ namespace DeathStar.App.SubCommands
 
                     var environment = await _environmentRepository.GetEnvironmentByName(EnvironmentName);
 
-                    var keep = !environment.ShowWarning || ConsoleCore.GetYesNo("If you pull DLQ messages you will download and delete, do you wanna make it?");
-                    if (keep is false)
-                        return 1;
-
-                    ConsoleCore.Message("Pulling messages.....");
-                    if (PullAll is false)
-                        Count = 1;
-
-                    await _asbService.Pull(environment.Connection, QueueName, Count);
+                    ConsoleCore.Message("Peeking messages...");
+                    
+                    await _asbService.Peek(environment.Connection, QueueName, PeekAll, Count);
                     ConsoleCore.Success($"The DLQ queue has been saved");
                     return 1;
                 }

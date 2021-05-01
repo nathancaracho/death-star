@@ -6,6 +6,7 @@ using Azure.Messaging.ServiceBus;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DeathStar.App.Domain.Models;
 
 namespace DeathStar.App.Infrastructure.QueueRepository
 {
@@ -20,16 +21,40 @@ namespace DeathStar.App.Infrastructure.QueueRepository
 
         }
 
-        public async Task<IEnumerable<ServiceBusReceivedMessage>> Pull(string connection, string queueName, int? count = null)
+        public async Task<IEnumerable<ServiceBusReceivedMessage>> PeekAll(string connection, string queueName)
         {
-            if (count.HasValue is false)
-                count = await Count(connection, queueName);
-        
+
+            var queueLength = await Count(connection, queueName);
+            long fromSequenceNumber = 0;
+            List<ServiceBusReceivedMessage> messages = new List<ServiceBusReceivedMessage>();
+
+            ConsoleCore.ProgressBar(messages.Count, queueLength);
+
+
             await using (var client = new ServiceBusClient(connection))
             {
                 var deadLetter = client.CreateReceiver($"{queueName}/$DeadLetterQueue");
-                return await deadLetter.ReceiveMessagesAsync(count.Value);
+                do
+                {
+                    var peekedMessages = await deadLetter.PeekMessagesAsync(queueLength, fromSequenceNumber);
+
+                    if (peekedMessages.Any())
+                    {
+                        messages.AddRange(peekedMessages);
+                        fromSequenceNumber = peekedMessages
+                                            .OrderByDescending(msg => msg.EnqueuedSequenceNumber)
+                                            .Last()
+                                            .SequenceNumber;
+
+                        ConsoleCore.ProgressBar(messages.Count, queueLength);
+                    }
+                    else
+                        break;
+
+                } while (messages.Count < queueLength);
+
             }
+            return messages;
         }
     }
 }
