@@ -10,75 +10,77 @@ using DeathStar.App.Infrastructure.FileRepository;
 namespace DeathStar.App.SubCommands
 {
     [Command("queue", Description = "Manage queue"),
-        Subcommand(typeof(Count)), Subcommand(typeof(Peek))]
+        Subcommand(typeof(Dlq))]
     [HelpOption("-?")]
     public class ServiceBusSubCommand : SubCommandBase
     {
-        [Command("count", Description = "Count deadletter queue message")]
+        [Command("dlq", Description = "Dead Letter"),
+            Subcommand(typeof(Count)), Subcommand(typeof(Peek))]
         [HelpOption("-?")]
-        private class Count : QueueSubCommand
+        private class Dlq : SubCommandBase
         {
-            private readonly IServiceBusService _asbService;
-            public Count(IServiceBusService asbService)
+            [Command("count", Description = "Count deadletter queue message")]
+            [HelpOption("-?")]
+            private class Count : QueueSubCommand
             {
-                _asbService = asbService;
+                private readonly IServiceBusService _asbService;
+                public Count(IServiceBusService asbService)
+                {
+                    _asbService = asbService;
+                }
+
+                private async Task<int> OnExecute()
+                {
+
+                    try
+                    {
+                        ConsoleCore.Message("Get DLQ Count.....");
+                        var count = await _asbService.Count(EnvironmentName, QueueName);
+                        ConsoleCore.Success($"The DLQ queue {QueueName} have {count} itens for env {EnvironmentName}.");
+                        return 1;
+                    }
+                    catch (Exception ex)
+                    {
+                        ConsoleCore.Error($"Have some error whe try get messages count {ex.Message}");
+                        return -1;
+                    }
+                }
             }
 
-            private async Task<int> OnExecute()
+            [Command("peek", Description = "Peek messages")]
+            [HelpOption("-?")]
+            private class Peek : QueueSubCommand
             {
+                [Option("--all", Description = "peek all menssages")]
+                private bool PeekAll { get; } = false;
 
-                try
+                private readonly IEnvironmentRepository _environmentRepository;
+                private readonly IServiceBusService _asbService;
+                public Peek(IServiceBusService asbService, IEnvironmentRepository environmentRepository)
                 {
-                    ConsoleCore.Message("Get DLQ Count.....");
-                    var count = await _asbService.Count(EnvironmentName, QueueName);
-                    ConsoleCore.Success($"The DLQ queue {QueueName} have {count} itens for env {EnvironmentName}.");
-                    return 1;
+                    _environmentRepository = environmentRepository;
+                    _asbService = asbService;
                 }
-                catch (Exception ex)
-                {
-                    ConsoleCore.Error($"Have some error whe try get messages count {ex.Message}");
-                    return -1;
-                }
-            }
-        }
 
-        [Command("peek", Description = "Peek messages")]
-        [HelpOption("-?")]
-        private class Peek : QueueSubCommand
-        {
-            [Range(1, 99999, ErrorMessage = "Count out of range")]
-            [Option("--count", ShortName = "c", Description = "peek queue count")]
-            private int? Count { get; set; }
-
-            [Option("--all", Description = "peek all menssages")]
-            private bool PeekAll { get; } = false;
-
-            private readonly IEnvironmentRepository _environmentRepository;
-            private readonly IServiceBusService _asbService;
-            public Peek(IServiceBusService asbService, IEnvironmentRepository environmentRepository)
-            {
-                _environmentRepository = environmentRepository;
-                _asbService = asbService;
-            }
-
-            private async Task<int> OnExecute()
-            {
-
-                try
+                private async Task<int> OnExecute()
                 {
 
-                    var environment = await _environmentRepository.GetEnvironmentByName(EnvironmentName);
+                    try
+                    {
 
-                    ConsoleCore.Message("Peeking messages...");
-                    
-                    await _asbService.Peek(environment.Connection, QueueName, PeekAll, Count);
-                    ConsoleCore.Success($"The DLQ queue has been saved");
-                    return 1;
-                }
-                catch (Exception ex)
-                {
-                    ConsoleCore.Error($"Have some error when try pull messages: {ex.Message}");
-                    return -1;
+                        var environment = await _environmentRepository.GetEnvironmentByName(EnvironmentName);
+
+                        ConsoleCore.Message("Peeking messages...");
+
+                        await _asbService.Peek(environment.Connection, QueueName, PeekAll);
+                        ConsoleCore.Success($"The DLQ queue has been saved");
+                        return 1;
+                    }
+                    catch (Exception ex)
+                    {
+                        ConsoleCore.Error($"Have some error when try pull messages: {ex.Message}");
+                        return -1;
+                    }
                 }
             }
         }

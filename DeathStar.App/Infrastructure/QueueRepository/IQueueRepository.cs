@@ -7,5 +7,6 @@ namespace DeathStar.App.Infrastructure.QueueRepository
     {
         Task<int> Count(string connection, string queueName);
         Task<IEnumerable<T>> PeekAll(string connection, string queueName);
+        Task<T> PeekOne(string connection, string queueName);
     }
 }

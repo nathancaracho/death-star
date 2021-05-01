@@ -56,5 +56,18 @@ namespace DeathStar.App.Infrastructure.QueueRepository
             }
             return messages;
         }
+
+        public async Task<ServiceBusReceivedMessage> PeekOne(string connection, string queueName)
+        {
+
+
+            await using (var client = new ServiceBusClient(connection))
+            {
+                var deadLetter = client.CreateReceiver($"{queueName}/$DeadLetterQueue");
+
+                return await deadLetter.PeekMessageAsync();
+
+            }
+        }
     }
 }

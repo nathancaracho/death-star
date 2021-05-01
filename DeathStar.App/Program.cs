@@ -13,7 +13,7 @@ namespace DeathStar.App
 {
     [Command(Description = "QUEUE Management"),
     Subcommand(typeof(EnvironmentSubCommand), typeof(ServiceBusSubCommand))]
-    [HelpOption("-man")]
+    [HelpOption("-?")]
     class App : SubCommandBase
     {
         public static int Main(string[] args)
