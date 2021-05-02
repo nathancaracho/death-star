@@ -28,6 +28,7 @@ namespace DeathStar.App.Infrastructure.QueueRepository
             long fromSequenceNumber = 0;
             List<ServiceBusReceivedMessage> messages = new List<ServiceBusReceivedMessage>();
 
+            //create empty progressBar
             ConsoleCore.ProgressBar(messages.Count, queueLength);
 
 
@@ -69,5 +70,21 @@ namespace DeathStar.App.Infrastructure.QueueRepository
 
             }
         }
+        public async Task<IEnumerable<(string QueueName, long ActiveCount, long DlqCount)>> GetReport(string connection, string[] queueNames)
+        {
+            var queuesInfo = new List<(string, long, long)>();
+            var managementClient = new ManagementClient(connection);
+            //create empty progressBar
+            ConsoleCore.ProgressBar(queuesInfo.Count, queueNames.Length);
+            foreach (var queueName in queueNames)
+            {
+                var queue = await managementClient.GetQueueRuntimeInfoAsync(queueName);
+                queuesInfo.Add((queueName, queue.MessageCountDetails.ActiveMessageCount, queue.MessageCountDetails.DeadLetterMessageCount));
+                ConsoleCore.ProgressBar(queuesInfo.Count, queueNames.Length);
+            }
+
+            return queuesInfo;
+        }
+
     }
 }

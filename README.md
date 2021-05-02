@@ -3,7 +3,7 @@
 > ![Nuget](https://img.shields.io/nuget/dt/dotnet-death-star?color=%2300&logo=NuGet) | ![Version](https://img.shields.io/nuget/vpre/dotnet-death-star?logo=NuGet)
 
 
-A DLQ/Queue simple command line Helper.
+A DLQ/Actives queue simple command line Helper.
 ## TODO List
 - [x] Menage environments as JSON (start with json file)
   	- [x] Save one
@@ -15,7 +15,7 @@ A DLQ/Queue simple command line Helper.
 		- [x] Get DLQ message count
 		- [x] Peek all DLQ messages
 		- [x] Peek one DLQ message
-		- [ ] Print DLQs info as table
+		- [x] Print DLQs info as table
 		- [ ] Pull all DLQ
 		  - [ ] Create a temp file to ensure no message lose.
 		- [ ] Push all to QUEUE   	
@@ -33,7 +33,7 @@ A DLQ/Queue simple command line Helper.
 ### From nuget
 
 ```bash
-dotnet tool install --global dotnet-death-star --version 0.0.1-alpha-1
+dotnet tool install --global dotnet-death-star --version 0.0.1-alpha-2
 ```
 
 ### From Local
@@ -90,7 +90,7 @@ Success: May the force be with
 #### Count DLQs messages
 
 ```bash
-  $ dotnet death-star queue dql count --env test --queue some-queue
+ $ dotnet death-star queue dql count --env test --queue some-queue
  (º-)  Get DLQ Count.....
  Success: May the force be with  
   The DLQ queue some-queue have 78 itens for env test.
@@ -98,11 +98,28 @@ Success: May the force be with
 #### Peek all DLQs messages
 
 ```bash
-  $ dotnet death-star queue dql peek --all --env test --queue some-queue
+ $ dotnet death-star queue dql peek --all --env test --queue some-queue
  (º-)  Peeking messages...
  [ ■■■■■■■■■■■ ] - 78≃100%
  (º-)  Serializing message...
  (º-)  Saving...
  Success: May the force be with  
   The DLQ queue has been saved.
+```
+### Queue report
+
+> The report command return a table with **Active** and **DLQ** queues messages counts.
+
+```bash
+$ dotnet dotnet death-star queue report --env dev first-queue second-queue third-queue
+(º-)  Getting queues infos...
+Success: May the force be with 
+ 
+
+|                    Name                      |   Active   |     DLQ    |
+|----------------------------------------------|------------|------------|
+|                                   first-queue|         123|          46|
+|                              	   second-queue|        9088|          67|
+|                                   third-queue|           0|          98|
+
 ```

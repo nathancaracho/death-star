@@ -49,7 +49,6 @@ namespace DeathStar.App.Core
             Console.CursorLeft = 0;
             WriteLineWithColor($"{_deathStarSuffix} {(ProgressBar)(done, total)}", ConsoleColor.Blue);
             Console.CursorTop = Console.GetCursorPosition().Top - 1;
-            Console.CursorVisible = false;
         }
         private static void WriteLineWithColor(string msg, ConsoleColor color)
         {

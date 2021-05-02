@@ -6,11 +6,12 @@ using DeathStar.App.Domain.Services.Queue;
 using McMaster.Extensions.CommandLineUtils;
 using System;
 using DeathStar.App.Infrastructure.FileRepository;
+using DeathStar.App.Infrastructure.QueueRepository;
 
 namespace DeathStar.App.SubCommands
 {
     [Command("queue", Description = "Manage queue"),
-        Subcommand(typeof(Dlq))]
+        Subcommand(typeof(Dlq)), Subcommand(typeof(Report))]
     [HelpOption("-?")]
     public class ServiceBusSubCommand : SubCommandBase
     {
@@ -83,6 +84,57 @@ namespace DeathStar.App.SubCommands
                     }
                 }
             }
+
+
+        }
+
+        [Command("report", Description = "generate queue report")]
+        [HelpOption("-?")]
+        private class Report
+        {
+            public IEnvironmentRepository _environmentRepository { get; }
+
+            private readonly IServiceBusQueueRepository _serviceBusQueueRepository;
+
+            [Required(ErrorMessage = "The Environment name is required")]
+            [Option("--env", Description = "Environment Name")]
+            protected string EnvironmentName { get; }
+
+            [Required(ErrorMessage = "The queues list is required")]
+
+            [Argument(1, "queues", "Queues names list")]
+            protected string[] Queues { get; }
+
+            public Report(IServiceBusQueueRepository serviceBusQueueRepository, IEnvironmentRepository environmentRepository)
+            {
+                _environmentRepository = environmentRepository;
+                _serviceBusQueueRepository = serviceBusQueueRepository;
+            }
+
+            private async Task<int> OnExecute()
+            {
+
+                try
+                {
+                    ConsoleCore.Message("Getting queues infos...");
+
+                    var connection = await _environmentRepository.GetEnvironmentByName(EnvironmentName);
+                    var queuesInfo = await _serviceBusQueueRepository.GetReport(connection.Connection, Queues);
+                    ConsoleCore.Success("\n");
+                    Console.WriteLine("|                    Name                      |   Active   |     DLQ    |");
+                    Console.WriteLine("|----------------------------------------------|------------|------------|");
+                    foreach (var queue in queuesInfo)
+                        Console.WriteLine("|{0,46}|{1,12}|{2,12}|", queue.QueueName, queue.ActiveCount, queue.DlqCount);
+                    return 1;
+
+                }
+                catch (Exception ex)
+                {
+                    ConsoleCore.Error($"Have some error when try get queues infos: {ex.Message}");
+                    return -1;
+                }
+            }
+
         }
 
     }
