@@ -14,10 +14,6 @@ jobs:
     runs-on: ubuntu-18.04
     name: Update NuGet package
     steps:
-
-      - name: Checkout repository
-        uses: actions/checkout@v1
-
       - name: Setup .NET Core @ Latest
         uses: actions/setup-dotnet@v1
         with:
