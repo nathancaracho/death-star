@@ -15,11 +15,45 @@ namespace DeathStar.App.SubCommands
     [HelpOption("-?")]
     public class ServiceBusSubCommand : SubCommandBase
     {
+
         [Command("dlq", Description = "Dead Letter"),
-            Subcommand(typeof(Count)), Subcommand(typeof(Peek))]
+            Subcommand(typeof(Count)), Subcommand(typeof(Peek)), Subcommand(typeof(Receive))]
         [HelpOption("-?")]
         private class Dlq : SubCommandBase
         {
+
+
+            [Command("receive", Description = "receive queue")]
+            [HelpOption("-?")]
+
+            private class Receive : QueueSubCommand
+            {
+                private readonly IServiceBusService _asbService;
+                public Receive(IServiceBusService asbService)
+                {
+                    _asbService = asbService;
+                }
+
+                private async Task<int> OnExecute()
+                {
+
+                    try
+                    {
+
+                        ConsoleCore.Message("Get DQL queues and delete.....");
+                        await _asbService.Receive(EnvironmentName, QueueName);
+                        ConsoleCore.Success($"The DLQ queue {QueueName} for env {EnvironmentName} was saved.");
+                        return 1;
+                    }
+                    catch (Exception ex)
+                    {
+                        ConsoleCore.Error($"Have some error whe try receive messages: {ex.Message}");
+                        return -1;
+                    }
+                }
+            }
+
+
             [Command("count", Description = "Count deadletter queue message")]
             [HelpOption("-?")]
             private class Count : QueueSubCommand

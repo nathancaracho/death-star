@@ -16,8 +16,8 @@ A DLQ/Actives queue simple command line Helper.
 		- [x] Peek all DLQ messages
 		- [x] Peek one DLQ message
 		- [x] Print DLQs info as table
-		- [ ] Pull all DLQ
-		  - [ ] Create a temp file to ensure no message lose.
+		- [X] Pull all DLQ
+		  - [ ] Create a temp file to ensure no message lose. (WIP)
 		- [ ] Push all to QUEUE   	
 - [ ] Automatize NUGET push
   - [x] Create a nuget package (dotnet-death-star)
@@ -42,7 +42,7 @@ dotnet tool install --global dotnet-death-star --version 0.0.1-alpha-2
 git clone https://github.com/nathancaracho/death-star.git && \
 cd death-star && \
 dotnet pack -o out && \
-dotnet tool install dotnet-death-star --add-source /DeathStar.App/out --version 0.0.1-alpha-1
+dotnet tool install dotnet-death-star --add-source /DeathStar.App/out --version 0.0.1-alpha-3
 ```
 
 ## Commands
@@ -105,6 +105,19 @@ Success: May the force be with
  (º-)  Saving...
  Success: May the force be with  
   The DLQ queue has been saved.
+```
+### Receive all and delete DLQs messages(WIP)
+
+> Receive all messages and **DELETE**
+
+```bash
+$ dotnet death-star queue dlq receive --env dev third-queue
+(º-)  Get DQL queues and delete.....
+(º-)  Serializing message...0%
+(º-)  Saving...
+Success: May the force be with 
+ The DLQ queue customer-insert for env dev was saved.
+
 ```
 ### Queue report
 

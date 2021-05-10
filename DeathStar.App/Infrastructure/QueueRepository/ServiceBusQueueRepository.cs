@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DeathStar.App.Domain.Models;
+using Microsoft.Azure.ServiceBus;
 
 namespace DeathStar.App.Infrastructure.QueueRepository
 {
@@ -86,5 +87,37 @@ namespace DeathStar.App.Infrastructure.QueueRepository
             return queuesInfo;
         }
 
+        public async Task<IEnumerable<ServiceBusReceivedMessage>> ReceiveAll(string connection, string queueName)
+        {
+            var queueLength = await Count(connection, queueName);
+            List<ServiceBusReceivedMessage> messages = new List<ServiceBusReceivedMessage>();
+
+            //create empty progressBar
+            ConsoleCore.ProgressBar(messages.Count, queueLength);
+            var configure = new ServiceBusReceiverOptions
+            {
+                ReceiveMode = ServiceBusReceiveMode.ReceiveAndDelete
+            };
+
+            await using (var client = new ServiceBusClient(connection))
+            {
+                var deadLetter = client.CreateReceiver($"{queueName}/$DeadLetterQueue", options: configure);
+                do
+                {
+                    var receivedMessages = await deadLetter.ReceiveMessagesAsync(queueLength);
+
+                    if (receivedMessages.Any())
+                    {
+                        messages.AddRange(receivedMessages);
+                        ConsoleCore.ProgressBar(messages.Count, queueLength);
+                    }
+                    else
+                        break;
+
+                } while (messages.Count < queueLength);
+
+            }
+            return messages;
+        }
     }
 }
