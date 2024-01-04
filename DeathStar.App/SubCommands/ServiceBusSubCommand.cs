@@ -107,7 +107,7 @@ namespace DeathStar.App.SubCommands
 
                         ConsoleCore.Message("Peeking messages...");
 
-                        await _asbService.Peek(environment.Connection, QueueName, PeekAll);
+                        await _asbService.Peek(environment.Name, QueueName, PeekAll);
                         ConsoleCore.Success($"The DLQ queue has been saved");
                         return 1;
                     }

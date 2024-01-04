@@ -7,7 +7,7 @@ A DLQ/Actives queue simple command line Helper.
 ## TODO List
 - [x] Menage environments as JSON (start with json file)
   	- [x] Save one
-  	- [x] List all
+  	- [x] List all	
   	- [x] List by name
   	- [x] Remove one
 - [ ] Menage queue operations
@@ -90,7 +90,7 @@ Success: May the force be with
 #### Count DLQs messages
 
 ```bash
- $ dotnet death-star queue dql count --env test --queue some-queue
+ $ dotnet death-star queue dlq count --env test --queue some-queue
  (º-)  Get DLQ Count.....
  Success: May the force be with  
   The DLQ queue some-queue have 78 itens for env test.
@@ -98,7 +98,7 @@ Success: May the force be with
 #### Peek all DLQs messages
 
 ```bash
- $ dotnet death-star queue dql peek --all --env test --queue some-queue
+ $ dotnet death-star queue dlq peek --all --env test --queue some-queue
  (º-)  Peeking messages...
  [ ■■■■■■■■■■■ ] - 78≃100%
  (º-)  Serializing message...
